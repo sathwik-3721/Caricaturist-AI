@@ -283,7 +283,7 @@ export default function CaricatureGeneration() {
                 </button>
               </div>
             </motion.div>
-          )} 
+          )}  
 
           {step === 3 && (
             <motion.div
