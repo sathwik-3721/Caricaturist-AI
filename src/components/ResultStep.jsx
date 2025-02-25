@@ -17,7 +17,7 @@ const ResultStep = ({ handleStartOver, handleDownload }) => {
         <div className="bg-white shadow-lg rounded-lg p-4 inline-block items-center ">
             <div className="flex justify-between items-center">
                 <img src={LabsLogo} alt="Labs Logo" className="h-10 w-30 mb-2"/>
-                <p className="font-bold mb-2">Booth #1234</p>
+                <p className="font-bold mb-2 dark:text-miracle-darkBlue text-miracle-lightBlue/100">Booth #1234</p>
             </div>
             <div className="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center m-auto">
                 <img
