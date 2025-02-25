@@ -1,19 +1,20 @@
-"use client";
-
-import { motion, AnimatePresence } from "framer-motion";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import React, { useState, useEffect } from "react";
-import MiracleLoader from "../assets/Loader.gif";
-import { Upload, Edit2, X } from "lucide-react";
-import LabsLogo from "../assets/labs.png";
-import { useTheme } from "next-themes";
+import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { Upload, Edit2, X } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTheme } from "next-themes";
+import MiracleLoader from "../assets/Loader.gif";
+import LabsLogoBlack from "../assets/labsBlack.png";
+import LabsLogoWhite from "../assets/labsWhite.png";
 
 const Image = dynamic(() => import("next/image"), { ssr: false });
 
-export default function CaricatureGenerator() {
-  const [subTitle, setSubTitle] = useState("Excited to transform your photo? Click 'Generate'!")
-  const [title, setTitle] = useState("Generate Caricature")
+export default function CaricatureGeneration() {
+  const [subTitle, setSubTitle] = useState(
+    "Excited to transform your photo? Click 'Generate'!"
+  );
+  const [title, setTitle] = useState("Generate Caricature");
   const [selectedPrompts, setSelectedPrompts] = useState([]);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedStyle, setSelectedStyle] = useState(null);
@@ -23,14 +24,14 @@ export default function CaricatureGenerator() {
   const [step, setStep] = useState(1);
 
   const [prompts, setPrompts] = useState([
+    "Funny",
     "Exaggerated",
-    "Minimalist",
-    "Realistic",
     "Colorful",
+    "Minimalist",
+    "Cartoon",
+    "Realistic",
     "Abstract",
     "Vintage",
-    "Cartoon",
-    "Funny",
   ]);
 
   const styles = [
@@ -45,11 +46,19 @@ export default function CaricatureGenerator() {
   ];
 
   useEffect(() => {
-    // Force a re-render when the theme changes
     const body = document.querySelector("body");
     body?.classList.remove("light", "dark");
     body?.classList.add(theme || "");
+
+    console.log(theme, "From FE");
   }, [theme]);
+
+  const handleStartOver = () => {
+    setSelectedPrompts();
+    setUploadedImage();
+    setSelectedStyle();
+    setStep(1);
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
@@ -85,15 +94,15 @@ export default function CaricatureGenerator() {
   };
 
   const loadingAnimation = async () => {
-    setTitle("Creating your caricature... Almost there!")
-    setSubTitle("Generating your unique caricature – almost there!")
+    setTitle("Creating your caricature... Almost there!");
+    setSubTitle("Generating your unique caricature – almost there!");
     setLoading(true);
     console.log("loading", loading);
     setTimeout(async () => {
       await generateCaricature();
       setLoading(false);
       setTitle("Generating your caricature... Please wait.");
-      setTitle("Excited to transform your photo? Click 'Generate'!")
+      setTitle("Excited to transform your photo? Click 'Generate'!");
     }, 5000);
   };
 
@@ -113,33 +122,36 @@ export default function CaricatureGenerator() {
     setStep(1);
   };
 
-  const handleNextStep = () => {
-    setStep(2);
-  };
+  //   const handleNextStep = () => {
+  //     setStep(2);
+  //   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col transition-colors duration-200">
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <header className="bg-miracle-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center space-x-6 mb-4 sm:mb-0">
             <img
-              // className="border border-black"
-              src={LabsLogo}
+              src={
+                theme === "light" || theme === "system"
+                  ? LabsLogoBlack
+                  : LabsLogoWhite
+              }
               alt="Labs Logo"
               width={120}
               height={120}
             />
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white m-auto">
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-miracle-white m-auto">
               AI Caricature Generator
             </h1>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-500 dark:text-gray-200">
               Step {step} of 5
             </span>
             <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div
-                className="bg-blue-600 rounded-full h-2 transition-all duration-500 ease-out"
+                className="dark:bg-miracle-lightBlue/80 rounded-full h-2 transition-all duration-500 ease-out bg-miracle-mediumBlue"
                 style={{ width: `${(step / 5) * 100}%` }}
               ></div>
             </div>
@@ -159,7 +171,7 @@ export default function CaricatureGenerator() {
               transition={{ duration: 0.5 }}
               className="max-w-md mx-auto"
             >
-              <div className="bg-white shadow-lg rounded-lg p-8 text-center">
+              <div className="bg-white shadow-lg rounded-lg p-8 text-center ">
                 <Upload className="mx-auto h-16 w-16 text-blue-500" />
                 <h2 className="mt-6 text-2xl font-semibold text-gray-900">
                   Upload an image
@@ -176,19 +188,19 @@ export default function CaricatureGenerator() {
                     />
                     <button
                       onClick={handleReupload}
-                      className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
+                      className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-miracle-red/30"
                     >
                       <X className="w-5 h-5 text-gray-600" />
                     </button>
                     <button
                       onClick={() => setStep(2)}
-                      className="mt-6 px-6 py-3 w-full border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                      className="mt-6 px-6 py-3 w-full border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                     >
                       Next
                     </button>
                   </div>
                 ) : (
-                  <label className="mt-6 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors duration-200">
+                  <label className="mt-6 inline-flex w-full justify-center text-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors duration-200">
                     <input
                       type="file"
                       className="sr-only"
@@ -211,7 +223,7 @@ export default function CaricatureGenerator() {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-miracle-white mb-6 text-center">
                 Select a prompt
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -220,7 +232,7 @@ export default function CaricatureGenerator() {
                     key={prompt}
                     className={`relative p-4 rounded-lg shadow-md text-center transition-all duration-200 transform hover:scale-105 ${
                       selectedPrompts.includes(prompt)
-                        ? "bg-blue-600 text-white"
+                        ? "dark:bg-miracle-darkBlue/100 bg-miracle-darkBlue/90 text-miracle-white hover:bg-miracle-darkBlue/80"
                         : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
                     }`}
                   >
@@ -259,18 +271,16 @@ export default function CaricatureGenerator() {
               <div className="mt-8 flex justify-between">
                 <button
                   onClick={() => setStep(1)}
-                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Back
                 </button>
                 <button
                   onClick={() => setStep(3)}
-                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Next
                 </button>
-                {/* <div className="mt-8 flex justify-between"> */}
-                {/* </div> */}
               </div>
             </motion.div>
           )}
@@ -284,7 +294,7 @@ export default function CaricatureGenerator() {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center dark:text-miracle-white">
                 Choose a Style
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
@@ -306,7 +316,7 @@ export default function CaricatureGenerator() {
               <div className="mt-8 flex justify-between">
                 <button
                   onClick={() => setStep(2)}
-                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Back
                 </button>
@@ -323,10 +333,10 @@ export default function CaricatureGenerator() {
               transition={{ duration: 0.5 }}
               className="text-center max-w-md mx-auto"
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 dark:text-gray-200">
                 {title}
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-lg text-gray-600 mb-8 dark:text-gray-300">
                 {subTitle}
               </p>
               {loading === true ? (
@@ -335,15 +345,9 @@ export default function CaricatureGenerator() {
                 </div>
               ) : (
                 <div className="flex justify-center">
-                  {/* <button
-                  onClick={() => setStep(3)}
-                  className="px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                >
-                  Back
-                </button> */}
                   <button
                     onClick={loadingAnimation}
-                    className="px-8 py-4 border border-transparent text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 transform hover:scale-105"
+                    className="px-8 py-4 border border-transparent text-lg font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 transform hover:scale-105"
                   >
                     Generate
                   </button>
@@ -363,28 +367,24 @@ export default function CaricatureGenerator() {
             >
               {console.log("loading stp5", loading)}
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 dark:text-gray-200">
                   Your Caricature
                 </h2>
                 <div className="bg-white shadow-lg rounded-lg p-8 inline-block items-center">
                   <div className="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center m-auto">
-                    {/* <ImageIcon className="h-16 w-16 text-gray-400" /> */}
-                    <img src="https://i.pinimg.com/736x/50/b7/58/50b7589adbdac2274b92d32eca46629b.jpg" className="w-64 h-64"/>
+                    <img
+                      src="https://i.pinimg.com/736x/50/b7/58/50b7589adbdac2274b92d32eca46629b.jpg"
+                      className="w-64 h-64"
+                    />
                   </div>
-                  <p className="mt-4 text-sm text-gray-500">
+                  <p className="mt-4 text-sm text-gray-600">
                     Here is your caricature
                   </p>
                 </div>
                 <div className="mt-8 flex justify-center">
-                  {/* <button
-                      onClick={() => setStep(4)}
-                      className="px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                    >
-                      Back
-                    </button> */}
                   <button
-                    onClick={() => setStep(1)}
-                    className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    onClick={() => handleStartOver()}
+                    className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-miracle-white bg-miracle-darkBlue hover:bg-miracle-darkBlue/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                   >
                     Start Over
                   </button>
@@ -394,17 +394,6 @@ export default function CaricatureGenerator() {
           )}
         </AnimatePresence>
       </main>
-
-      {/* <footer className="shadow-sm mt-auto bg-gradient-to-br from-blue-100 via-white to-red-100">
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <img
-            src={LabsLogo}
-            alt="Labs logo"
-            width={120}
-            height={40}
-          />
-        </div>
-      </footer> */}
     </div>
   );
 }
