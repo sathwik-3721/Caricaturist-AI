@@ -24,14 +24,14 @@ export default function CaricatureGeneration() {
   const [step, setStep] = useState(1);
 
   const [prompts, setPrompts] = useState([
-    "Funny",
-    "Exaggerated",
-    "Colorful",
-    "Minimalist",
-    "Cartoon",
-    "Realistic",
-    "Abstract",
-    "Vintage",
+    "Create an image with a humorous and lighthearted theme to entertain.",
+    "Make the elements exaggerated to enhance drama and visual impact.",
+    "Use a bright and bold color palette for a vibrant effect.",
+    "Keep the design simple, clean, and minimal with fewer details.",
+    "Illustrate the subject in a playful and whimsical cartoon-like style.",
+    "Ensure the artwork looks as close to real life as possible.",
+    "Use abstract shapes and unconventional forms to create a unique composition.",
+    "Give the design an old-fashioned, nostalgic look reminiscent of past eras.",
   ]);
 
   const styles = [
@@ -54,7 +54,7 @@ export default function CaricatureGeneration() {
   }, [theme]);
 
   const handleStartOver = () => {
-    setSelectedPrompts();
+    setSelectedPrompts([]);
     setUploadedImage();
     setSelectedStyle();
     setStep(1);
@@ -226,11 +226,31 @@ export default function CaricatureGeneration() {
               <h2 className="text-3xl font-bold text-gray-900 dark:text-miracle-white mb-6 text-center">
                 Select a prompt
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <motion.div
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+                // className="flex flex-col gap-4"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 1 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.15 },
+                  },
+                }}
+              >
                 {prompts.map((prompt) => (
-                  <div
+                  <motion.div
                     key={prompt}
-                    className={`relative p-4 rounded-lg shadow-md text-center transition-all duration-200 transform hover:scale-105 ${
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { type: "spring", stiffness: 200 },
+                      },
+                    }}
+                    className={`relative p-5 rounded-lg shadow-md text-center transition-all duration-200 transform hover:scale-105 ${
                       selectedPrompts.includes(prompt)
                         ? "dark:bg-miracle-darkBlue/100 bg-miracle-darkBlue/90 text-miracle-white hover:bg-miracle-darkBlue/80"
                         : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -265,9 +285,9 @@ export default function CaricatureGeneration() {
                         </button>
                       </>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
               <div className="mt-8 flex justify-between">
                 <button
                   onClick={() => setStep(1)}
@@ -283,7 +303,7 @@ export default function CaricatureGeneration() {
                 </button>
               </div>
             </motion.div>
-          )}  
+          )}
 
           {step === 3 && (
             <motion.div
@@ -298,10 +318,17 @@ export default function CaricatureGeneration() {
                 Choose a Style
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                {styles.map((style) => (
-                  <button
+                {styles.map((style, index) => (
+                  <motion.button
                     key={style}
                     onClick={() => handleStyleSelect(style)}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      delay: index * 0.1,
+                    }}
                     className="relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 transform hover:scale-105"
                   >
                     <img
@@ -310,7 +337,7 @@ export default function CaricatureGeneration() {
                       layout="fill"
                       objectFit="cover"
                     />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
               <div className="mt-8 flex justify-between">
