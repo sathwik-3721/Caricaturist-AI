@@ -2,6 +2,7 @@
 // import { useState } from "react";
 // import Layout from "./layout/Layout";
 // import CaricatureGenerator from "./components/CaricatureGenerator.jsx";
+import Car from "./components/Car.jsx";
 import CaricatureGenerator from "./components/CaricatureGenerator.jsx";
 
 
@@ -24,7 +25,7 @@ function App() {
           </Button>
         </div>
       )} */}
-      <CaricatureGenerator/>
+      <Car/>
     </>
   );
 }

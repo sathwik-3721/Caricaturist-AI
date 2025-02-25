@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import { Upload, Edit2, X } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Upload, X } from "lucide-react";
+import { ThemeToggle } from "@/components/themes/ThemeToggle";
 import { useTheme } from "next-themes";
 import MiracleLoader from "../assets/Loader.gif";
 import LabsLogoBlack from "../assets/labsBlack.png";
@@ -18,7 +18,6 @@ export default function CaricatureGeneration() {
   const [selectedPrompts, setSelectedPrompts] = useState([]);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedStyle, setSelectedStyle] = useState(null);
-  const [editingPrompt, setEditingPrompt] = useState(null);
   const [loading, setLoading] = useState(false);
   const { theme, setTheme } = useTheme();
   const [step, setStep] = useState(1);
@@ -104,17 +103,6 @@ export default function CaricatureGeneration() {
       setTitle("Generating your caricature... Please wait.");
       setTitle("Excited to transform your photo? Click 'Generate'!");
     }, 5000);
-  };
-
-  const handleEditPrompt = (prompt) => {
-    setEditingPrompt(prompt);
-  };
-
-  const handleSavePrompt = (oldPrompt, newPrompt) => {
-    setPrompts((prevPrompts) =>
-      prevPrompts.map((p) => (p === oldPrompt ? newPrompt : p))
-    );
-    setEditingPrompt(null);
   };
 
   const handleReupload = () => {
@@ -228,7 +216,6 @@ export default function CaricatureGeneration() {
               </h2>
               <motion.div
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
-                // className="flex flex-col gap-4"
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -256,35 +243,12 @@ export default function CaricatureGeneration() {
                         : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
                     }`}
                   >
-                    {editingPrompt === prompt ? (
-                      <input
-                        type="text"
-                        defaultValue={prompt}
-                        className="w-full bg-transparent text-center focus:outline-none"
-                        onBlur={(e) => handleSavePrompt(prompt, e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") {
-                            handleSavePrompt(prompt, e.currentTarget.value);
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handlePromptToggle(prompt)}
-                          className="w-full h-full"
-                        >
-                          {prompt}
-                        </button>
-                        <button
-                          onClick={() => handleEditPrompt(prompt)}
-                          className="absolute top-1 right-1 p-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                      </>
-                    )}
+                    <button
+                      onClick={() => handlePromptToggle(prompt)}
+                      className="w-full h-full"
+                    >
+                      {prompt}
+                    </button>
                   </motion.div>
                 ))}
               </motion.div>
